@@ -6,8 +6,8 @@ This is my solution for the Mercedes AMG Petronas F1 team technical interview wh
 ## File Structure
 * [presentation/](presentation) - contains presentation files demonstraiting the project
 * **[src/](src) - contains all the code for the project**
-* [src/main.py](main.py) - the program which implements the task
-* [src/test.py](test.py) - test cases which test the function within main.py
+* [src/main.py](src/main.py) - the program which implements the task
+* [src/test.py](src/test.py) - test cases which test the function within main.py
 * [src/inputs](src/inputs) - contains all the input file which are read into main.py
-* [src/outputs](src/outputs) - stores the output of the main.py program
+* [src/outputs](src/output) - stores the output of the main.py program
 
