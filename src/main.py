@@ -1,86 +1,90 @@
-import sys
-import time
+import sys, time, os, json
+from statistics import mean
+from decimal import *
 
-m = 2.0
-c = 0.5
+getcontext().prec = 16 #sets decimel function so it can accurately round to 15 decimel places
 
-def readInput(dir: str) -> [float]:
-    """This function reads in the values for variable X
+def readInputX(dir: str) -> [float]:
 
-    Parameters:
-    dir (str): the input filename provided by the user
+    print("Reading input for X...")
 
-    Returns:
-    X ([float]): an array of floating point numbers 
-    """
-    try:
-        with open(dir) as f:
-            X = [float(i) for i in f.read().split(', ')[1:]]
-            if len(X) == 0: raise ValueError("No values present.")
-            return X
-    except Exception as e:
-        print("Error reading input file: " + str(e))
-        sys.exit(1)
+    with open("inputs/"+dir) as f:
+        X = [Decimal(i) for i in f.read().split(', ')[1:]]
+        if len(X) == 0: raise ValueError("No values for X in the file provided.")
+        print("X successfully read from input.")
+        return X
 
-def function1(X:[float]) -> [float]:
-    return [m*i+c for i in X]
+def readParameters(dir: str):
+
+    print("Reading input for paramaters m and c...")
+   
+    with open("inputs/"+dir) as f:
+        parameters = [(i) for i in f.readlines()]
+        if len(parameters) == 0: raise ValueError("No values present for paramaters in the file provided.")
+        m = Decimal(float(parameters[0].replace("\n", "").replace("m,", "")))
+        c = Decimal(float(parameters[1].replace("\n", "").replace("c,", "")))
+        print("File successfully read from input.")
+        return m, c
+
+def function1(X:[float], m, c) -> [float]:
+    return [m * i + c for i in X]
 
 def function2(A:[float],Y:[float]) -> float:
-    return averageValue([i+j for i, j in zip(A, Y)])
+    B = [i+j for i, j in zip(A, Y)]
+    return B, mean(B)
 
 def function3(X:[float]) ->[float]:
     return [0 if i == 0 else 1/i for i in X]
 
 def function4(X: [float], b: float) -> [float]:
-    return [i+b for i in X]
+    return [i + b for i in X]
     
-def averageValue(lst:[float]) -> float:
-    """This function calculates the average value of elements an array
+def writeOutput(X,Y,A,b,C, B) -> None:
 
-    Parameters:
-    lst ([float]): an array of floating point numbers
+    print("Exporting metric and channel data...")
+    
+    try:
+        dir = "output/output " +time.strftime("%d-%m-%Y %H%M%S")
 
-    Returns:
-    sum(lst)/len(lst) (float): the mean value of elements in the array
-    """
-    return sum(lst)/len(lst)
+        if not os.path.exists(dir): os.makedirs(dir)
 
-def floatListToString(lst:[float]) -> str:
+        with open(dir + "/channel_data", "w") as f:
+            f.write('{}\n{}\n{}\n{}\n{}'.format("X, "+ floatArrayToString(X), "Y, " + floatArrayToString(Y), "A, " + floatArrayToString(A), "C, " + floatArrayToString(C), "B, " + floatArrayToString(B)))
+
+        with open(dir + "/metric_data", "w") as f:
+            f.write('{}'.format("b, " + str(b)))
+
+        print("Exported metric_data.txt and channel_data.txt succesfully to " + "src/output/output " +time.strftime("%d-%m-%Y %H%M%S") + ".")
+
+    except Exception as e:
+        print("Error while exporting data: " + str(e))
+        sys.exit(1)
+
+def floatArrayToString(lst:[float]) -> str:
     return ', '.join([str(n) for n in lst])
-
-def writeOutput(X,Y,A,b,C) -> None:
-    """This function exports all the data calculated in the program into a .txt file
-
-    Parameters:
-
-    Returns:
-    None
-    """
-    try:
-        with open("output/output "  + time.strftime("%d-%m-%Y %H%M%S") , "w") as f:
-            f.write('{}\n{}\n{}\n{}\n{}'.format("X, "+ floatListToString(X), "Y, " + floatListToString(Y), "A, " + floatListToString(A), "b, " + str(b), "C, " + floatListToString(C)))
-    except Exception as e:
-        print("Error exporting data: " + str(e))
-        sys.exit(1)
-        
-    
+          
 def main():
+
     try:
-        X = readInput(input("Enter the name of the file you want to process:"))
-        Y = function1(X)
-        A = function3(X)
-        b = function2(A,Y)
-        C = function4(X,b)
-        writeOutput(X,Y,A,b,C)
+        X = readInputX(input("Enter the name of the file which stores the channel X in src/inputs: ") or "channels.txt")
+        m, c = readParameters(input("Enter the name of the file which stores paramaters m and c in src/inputs: ") or "parameters.txt")
     except Exception as e:
-        print("Error when processing data: " + str(e))
+        print("Error reading input file: " + str(e))
+        sys.exit(1)
+ 
+    try:
+        print("Processing data...")
+        Y = function1(X, m, c)
+        A = function3(X)
+        B, b = function2(A,Y)
+        C = function4(X,b)
+        print("Data processed succesfully. The value of b for the provided data and parameters is " + str(b))
+
+    except Exception as e:
+        print("Error while processing data: " + str(e))
         sys.exit(1)
 
-    print(b)
-    """print(A)
-    print(len(C))
-    print(len(A))"""
-    print(C)
+    writeOutput(X,Y,A,b,C,B)
 
 if __name__ == "__main__":
     main()
