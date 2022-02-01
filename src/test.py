@@ -4,8 +4,11 @@ from main import function1, function2, function3, function4, floatArrayToString
 
 class TestFunctions(unittest.TestCase):
 
-    def test_function1(self):
+    def test_function1_listOfFloats_ShouldGiveDesiredOutput(self):
         self.assertEqual(function1([1,2], 2, 1), [3, 5], "Should be [2.5, 4.5]")
+
+    def test_function1_listOfFloatsContainsAString_ShouldThrowError(self):
+        self.assertRaises(TypeError, function1(["hello",2.21312312312,0.21312312312,100.1232131221], 2, 1))
 
     def test_function2(self):
         d1, d2 = function2([1,2], [3,4])
@@ -20,7 +23,8 @@ class TestFunctions(unittest.TestCase):
 
     def test_floatArrayToString(self):
         self.assertEqual(floatArrayToString([1.23123124,2.21312312312,0.21312312312,100.1232131221]), "1.23123124, 2.21312312312, 0.21312312312, 100.1232131221", "Should be 1.23123124, 2.21312312312, 0.21312312312, 100.1232131221")
-       
+    
+    
     print("Unit tests complete.")
 
 if __name__ == '__main__':

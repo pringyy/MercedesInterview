@@ -14,6 +14,9 @@ This is my solution for the Mercedes AMG Petronas F1 team technical interview wh
 
 I chose Python to write this program.
 
+In the functions when peforming calculations on the arrays I decided to use iteration (for loops) t
+
 Assumptions:
 - I assumed the channels.txt and parameters.txt could not be changed and therefore I imported them into the program using string manipulation in order to extract the required data. 
+- I assumed that the format of channels.txt and parameters.txt was the same format the output file had to be.
 - I assumed as the data provided in channels.txt was rounded to 15 decimel places I also made all the other channels and metrics calculated to be rounded to 15 decimel places
