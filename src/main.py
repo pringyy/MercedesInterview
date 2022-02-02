@@ -1,109 +1,155 @@
 import sys, time, os, json
-from typing import List
 from statistics import mean
 from decimal import *
 
-getcontext().prec = 16 #sets decimel function so it can accurately round to 15 decimel places
+getcontext().prec = 17 #sets decimal place for Decimal type values so program can accurately round to 16 decimal places
 
-def readInputX(dir: str) -> List[float]:
-    
+def function1(X: list, m: Decimal, c: Decimal) -> list:
+    '''
+
+    '''
     try:
-        print("Reading input for X...")
-
-        with open("inputs/"+dir) as f:
-            X = [Decimal(i) for i in f.read().split(', ')[1:]]
-            if len(X) == 0: raise ValueError("No values for X in the file provided.")
-            print("X successfully read from input.")
-            return X
+        if type(X) != list: raise TypeError("Argument passed into parameter 'channel' is not of type list.")
+        if type(m) != Decimal: raise TypeError("Argument passed into parameter 'm' is not of type Decimal.")
+        if type(c) != Decimal: raise TypeError("Argument passed into parameter '' is not of type Decimal.")
+        return [m * i + c for i in X]
     except Exception as e:
-        print("Error reading input file: " + str(e))
-        sys.exit(1)
+        print("Error in function1(): " + str(e))
+       
+def function2(channel1: list, channel2: list) -> (list, Decimal):
+    ''' This function takes the values of channels (a list of floating point numbers) and adds
+    them to each other and returns a combined list
 
-def readParameters(dir: str) -> (float,float):
+    
+    '''
+    try:
+        if type(channel1) != list: raise TypeError("Argument passed into parameter 'list1' is not of type list.")
+        if type(channel2) != list: raise TypeError("Argument passed into parameter 'list2' is not of type list.")
+        outputList = [i+j for i, j in zip(channel1, channel2)]
+        return outputList, mean(outputList)
+    except Exception as e:
+        print("Error in function2(): " + str(e))
+   
+def function3(channel: list) -> list:
+    '''
+    This function takes a channel (a list of floating point numbers) and returns a list of the same length
+    but every value has been replaced with 1/channel value
 
+    '''
+    try:
+        if type(channel) != list: raise TypeError("Argument passed into parameter 'channel' is not of type list.")
+        return [0 if i == 0 else 1/i for i in channel]
+    except Exception as e:
+        print("Error in function3(): " + str(e))
+
+def function4(channel: list, metric: Decimal) -> list:
+    ''' This function takes a channel (list of floating point numbers) and adds a metric 
+    (a single floating point number) on to each value present in the channel list.
+
+    
+    '''
+    try:
+        if type(channel) != list: raise TypeError("Argument passed into parameter 'channel' is not of type list.")
+        if type(metric) != Decimal: raise TypeError("Argument passed into parameter 'metric' is not of type Decimal.")
+        return [i + metric for i in channel]
+    except Exception as e:
+        print("Error in function4(): " + str(e))
+
+def readChannel(dir: str) -> list:
+    '''
+
+    '''
+    try:
+        print("Reading input for channel...")
+        with open("inputs/"+dir) as f:
+            channelArray = [Decimal(i) for i in f.read().split(', ')[1:]]
+            if len(channelArray) == 0: raise ValueError
+            print("Channel has been successfully read from input.")
+            return channelArray
+    except FileNotFoundError:
+        print("File name entered for the channel data could not be found in src/inputs. Please try again.")
+        return readChannel(input("Enter the name of the file which stores the channel data in src/inputs: ") or "channels.txt")
+    except ValueError:
+        print("The file provided does not contain any data. Please try again after amending the file format or use a different file.")
+        return readChannel(input("Enter the name of the file which stores the channel data in src/inputs: ") or "channels.txt")
+    except Exception:
+        print("The file provided format does not match the standard format or the data is of the incorrect type. Please amend this and try and input the file again")
+        return readChannel(input("Enter the name of the file which stores the channel data in src/inputs: ") or "channels.txt")
+        
+
+def readParameters(dir: str) -> (Decimal, Decimal):
+    '''
+
+    '''
     try:
         print("Reading input for paramaters m and c...")
         with open("inputs/"+dir) as f:
             parameters = [i for i in f.readlines()]
-            if len(parameters) != 2: raise ValueError("Not correct number of values for paramaters present in the input file.")
-            m = Decimal(float(parameters[0].replace("\n", "").replace("m,", "")))
-            c = Decimal(float(parameters[1].replace("\n", "").replace("c,", "")))
+            m = Decimal(parameters[0].replace("\n", "").replace("m,", ""))
+            c = Decimal(parameters[1].replace("\n", "").replace("c,", ""))
             print("File successfully read from input.")
             return m, c
+    except FileNotFoundError:
+        print("File name entered for the parameters could not be found in src/inputs. Please try again.")
+        return readParameters(input("Enter the name of the file which stores the parameters in src/inputs: ") or "parameters.txt")
+    except ValueError:
+        print("The file provided does not contain any data. Please try again after amending the file format or use a different file.")
+        return readParameters(input("Enter the name of the file which stores the parameters in src/inputs: ") or "parameters.txt")
+    except Exception:
+        print("The file provided format does not match the standard format or the data is of the incorrect type. Please amend this and try and input the file again")
+        return readParameters(input("Enter the name of the file which stores the parameters in src/inputs: ") or "parameters.txt")
 
-    except Exception as e:
-        print("Error reading input file: " + str(e))
-        sys.exit(1)
+def createOutputDir() -> str:
+    '''
 
-def function1(X:List[float], m: float, c: float) -> List[float]:
-    try:
-        return [m * i + c for i in X]
-    except Exception as e:
-        print("Error while calculating array Y: " + str(e))
-        sys.exit(1)
-
-def function2(A: List[float],Y: List[float]) -> (List[float], float):
-    try:
-        B = [i+j for i, j in zip(A, Y)]
-        return B, mean(B)
-    except Exception as e:
-        print("Error while calculating array B and metric b: " + str(e))
-        sys.exit(1)
-
-def function3(X: List[float]) -> List[float]:
-    try:
-        return [0 if i == 0 else 1/i for i in X]
-    except Exception as e:
-        print("Error while calculating array A: " + str(e))
-        sys.exit(1)
-
-def function4(X: List[float], b: float) -> List[float]:
-    try:
-        return [i + b for i in X]
-    except Exception as e:
-        print("Error while calculating array C: " + str(e))
-        sys.exit(1)
+    '''
+    dir = "output/output "+time.strftime("%d-%m-%Y %H%M%S")+"/"
+    if not os.path.exists(dir): os.makedirs(dir)
+    return dir
     
-    
-def writeOutput(channels, b) -> None:
+def writeOutput(dict, dir, fileName) -> None:
+    '''
 
-    print("Exporting metric and channel data...")
-    
+    '''
+    print("Exporting " + fileName + " data...")
     try:
-        dir = "output/output " +time.strftime("%d-%m-%Y %H%M%S")
-
-        if not os.path.exists(dir): os.makedirs(dir)
-
-        with open(dir + "/channel_data.txt", "w") as f:
-            for key in channels:
-                f.write(key + ", " + floatArrayToString(channels[key]) + "\n")
-
-        with open(dir + "/metric_data.txt", "w") as f:
-            f.write('{}'.format("b, " + str(b)))
-
-        print("Exported metric_data.txt and channel_data.txt succesfully to " + "src/output/output " +time.strftime("%d-%m-%Y %H%M%S") + ".")
-        
+        with open(dir+fileName, "w") as f:        
+            for key in dict:
+                if isinstance(dict[key], list):
+                    f.write(key + ", " + floatArrayToString(dict[key]) + "\n")
+                else:
+                    f.write(key + ", " + str(dict[key]) + "\n")
+        print(fileName + " successfully exported to src/"+dir)
     except Exception as e:
-        print("Error while exporting data: " + str(e))
+        print("Error while exporting " + fileName + ": " + str(e))
         sys.exit(1)
 
 def floatArrayToString(lst:[float]) -> str:
-    return ', '.join([str(n) for n in lst])
-          
-def main():
-  
-    X = readInputX(input("Enter the name of the file which stores the channel X in src/inputs: ") or "channels.txt")
-    m, c = readParameters(input("Enter the name of the file which stores paramaters m and c in src/inputs: ") or "parameters.txt")
+    return ', '.join([str(float(n)) for n in lst])
+
+    
+def main():  
+
+    print(function4([Decimal('1'),Decimal('0.25'),Decimal('1.25'),Decimal('10.0')], Decimal('2.4')))
+    channels = dict.fromkeys(['X', 'Y', 'A', 'B', 'C']) #Initialise dicitonary keys with no values to store channel arrays
+    parameters = dict.fromkeys(['m', 'c']) #Initialise dictionary keys with no values to store parameters 
+    metrics = dict.fromkeys(['b']) #Initialise dictionary keys with no values to store metrics 
+
+    channels['X'] = readChannel(input("Enter the name of the file which stores the channel X in src/inputs: ") or "channels.txt")
+    parameters['m'], parameters['c'] = readParameters(input("Enter the name of the file which stores paramaters m and c in src/inputs: ") or "parameters.txt")
 
     print("Processing data...")
-    Y = function1(X, m, c)
-    A = function3(X)
-    B, b = function2(A,Y)
-    C = function4(X,b)
-    print("Data processed succesfully. The value of b for the provided data and parameters is " + str(b))
+    channels['Y'] = function1(channels['X'], parameters['m'], parameters['c'])
+    channels['A'] = function3(channels['X'])
+    channels['B'], metrics['b'] = function2(channels['A'],channels['Y'])
+    channels['C'] = function4(channels['X'], metrics['b'])
+    print("Data processed succesfully. The value of b for the provided data and parameters is " + str(metrics['b']))
 
-    channelDict = dict(X = X, Y = Y, A = A, B = B, C = C) 
-    writeOutput(channelDict, b)
 
+    dir = createOutputDir()
+    writeOutput(metrics, dir, "metric_data.txt")
+    writeOutput(channels, dir, "channels_data.txt")
+    writeOutput(parameters, dir, "parameters_used.txt")
+    
 if __name__ == "__main__":
     main()
