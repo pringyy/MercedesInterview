@@ -1,6 +1,6 @@
 '''This program is an implementation of a task provided by 
-Mercedes F1 Team for a technical interview. Please see MANUAL.md
-for instructions on how to run the program. 
+Mercedes AMG Petronas F1 Team for a technical interview. Please 
+see MANUAL.md for instructions on how to run the program. 
 
 Author: Robert Pringle
 '''
@@ -22,7 +22,7 @@ def function1(X: list, m: Decimal, c: Decimal) -> list:
     c (Decimal): a single floating point number representing the y-intercept
 
     Returns:
-    list: a list of the Y coordinates calcuated from the data provided
+    list: a list of the Y values calculated from the data provided where each value is stored as type Decimal
     '''
     try:
         #Checks if data types of arguments passed in are correct
@@ -59,8 +59,8 @@ def function2(channel1: list, channel2: list) -> (list, Decimal):
    
 def function3(channel: list) -> list:
     '''
-    This function takes a channel list and returns the inverse value for each value in the original list. 
-    This function handles the division by zero error as if it identifies a 0 to be in the original list 
+    This function takes a channel list and returns a list of the inverse values for each value in the original 
+    list. This function handles the division by zero error as if it identifies a 0 to be in the original list 
     it will just set the value to 0 in the return list instead of throwing an error.
 
     Parameters:
@@ -168,7 +168,7 @@ def createOutputDir() -> str:
     None
 
     Returns
-    dir (str): returns the string of the created output folder
+    dir (str): returns the string of the created folders directory
     '''
     dir = "output/output "+time.strftime("%d-%m-%Y %H%M%S")+"/"
     if not os.path.exists(dir): os.makedirs(dir)

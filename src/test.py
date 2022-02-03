@@ -1,5 +1,5 @@
 '''This program is to test main.py which is an implementation 
-of a task provided by Mercedes F1 Team for a technical interview. 
+of a task provided by Mercedes AMG Petronas F1 Team for a technical interview. 
 Please see MANUAL.md for instructions on how to run the test suite. 
 
 Author: Robert Pringle
@@ -14,10 +14,10 @@ class TestFunctions(unittest.TestCase):
 
     #Tests for function1() in main.py:
     def test_function1_allArgumentsAreValidInputs_shouldReturnExpectedValues(self):
-        self.assertEqual(function1([Decimal('0.5'), Decimal('1.2'), Decimal('2.5')], Decimal('2'), Decimal('1')), [Decimal('2'), Decimal('3.4'), Decimal('6')], "[Decimal('2'), Decimal('3.4'), Decimal('6')]")
+        self.assertEqual(function1([Decimal('0.5'), Decimal('1.2'), Decimal('2.5')], Decimal('2'), Decimal('1')), [Decimal('2'), Decimal('3.4'), Decimal('6')], "Should be [Decimal('2'), Decimal('3.4'), Decimal('6')]")
         self.assertEqual(function1([Decimal('0.814723686393179'), Decimal('0.905791937075619'), Decimal('0.126986816293506')], Decimal('2'), Decimal('0.5')), [Decimal('2.1294473727863580'), Decimal('2.3115838741512380'), Decimal('0.7539736325870120')], "Should be [Decimal('2.1294473727863580'), Decimal('2.3115838741512380'), Decimal('0.7539736325870120')]")
         self.assertEqual(function1([Decimal('5'), Decimal('3'), Decimal('1'), Decimal('10')], Decimal('5'), Decimal('2')), [Decimal('27'), Decimal('17'), Decimal('7'), Decimal('52')], "Should be [Decimal('27'), Decimal('17'), Decimal('7'), Decimal('52')]")
-        self.assertEqual(function1([Decimal('0.5'), Decimal('1.2'), Decimal('2.5')], Decimal('2'), Decimal('1')), [Decimal('2'), Decimal('3.4'), Decimal('6')], "[Decimal('2'), Decimal('3.4'), Decimal('6')]")
+        self.assertEqual(function1([Decimal('0.5'), Decimal('1.2'), Decimal('2.5')], Decimal('2'), Decimal('1')), [Decimal('2'), Decimal('3.4'), Decimal('6')], " Should be[Decimal('2'), Decimal('3.4'), Decimal('6')]")
     
     def test_function1_firstArgumentIsNotListType_shouldThrowErrorAndStopSystem(self):
         with self.assertRaises((TypeError, SystemExit)): function1("Decimal('0.5'), Decimal('1.2'), Decimal('2.5')", Decimal('2'), Decimal('1'))
@@ -99,7 +99,7 @@ class TestFunctions(unittest.TestCase):
         self.assertEqual(listToString(["INC21321", "INC123123", "INC123123", "INC321312"]), "INC21321, INC123123, INC123123, INC321312", "Should be 'INC21321, INC123123, INC123123, INC321312'")
         self.assertEqual(listToString([Decimal('1.5'), Decimal('1.25'), Decimal('1.4'), Decimal('1.6')]), "1.5, 1.25, 1.4, 1.6", "Should be '1.5, 1.25, 1.4, 1.6'")
     
-    def test_listToString_argumentsIsNotListType_shouldThrowErrorAndStopSystem(self):
+    def test_listToString_argumentIsNotListType_shouldThrowErrorAndStopSystem(self):
         with self.assertRaises((TypeError, SystemExit)): listToString("hello")
         with self.assertRaises((TypeError, SystemExit)): listToString(True)
         with self.assertRaises((TypeError, SystemExit)): listToString({'a':'b', 'c':'d'})
