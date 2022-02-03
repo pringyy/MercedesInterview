@@ -1,3 +1,10 @@
+'''This program is to test main.py which is an implementation 
+of a task provided by Mercedes F1 Team for a technical interview. 
+Please see MANUAL.md for instructions on how to run the test suite. 
+
+Author: Robert Pringle
+'''
+
 import unittest
 from main import function1, function2, function3, function4, listToString
 from decimal import *
@@ -101,4 +108,3 @@ class TestFunctions(unittest.TestCase):
 if __name__ == '__main__':
     print("Performing unit tests...")
     unittest.main()
-

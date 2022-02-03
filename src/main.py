@@ -1,16 +1,32 @@
-import sys, time, os, json
+'''This program is an implementation of a task provided by 
+Mercedes F1 Team for a technical interview. Please see MANUAL.md
+for instructions on how to run the program. 
+
+Author: Robert Pringle
+'''
+
+import sys, time, os
 from statistics import mean
-from decimal import *
+from decimal import * #handles floating point numbers to avoid floating point error
 
 getcontext().prec = 17 #sets decimal place for Decimal type values so program can accurately round to 16 decimal places
 
 def function1(X: list, m: Decimal, c: Decimal) -> list:
-    '''
+    '''This function calculates coordinate Y for each value in channel X by iterating through
+    list X and putting it into the straight line equation. This means each value in X is multipled 
+    by the gradient (m) and then the y-intercept (c) is added.
 
+    Parameters:
+    X (list): a list of floating point numbers where each number is stored as Decimal type,
+    m (Decimal): a single floating point number representing the gradient,
+    c (Decimal): a single floating point number representing the y-intercept
+
+    Returns:
+    list: a list of the Y coordinates calcuated from the data provided
     '''
     try:
         #Checks if data types of arguments passed in are correct
-        if type(X) != list: raise TypeError("Argument passed into parameter 'channel' is not of type list.")
+        if type(X) != list: raise TypeError("Argument passed into parameter 'X' is not of type list.")
         if type(m) != Decimal: raise TypeError("Argument passed into parameter 'm' is not of type Decimal.")
         if type(c) != Decimal: raise TypeError("Argument passed into parameter 'c' is not of type Decimal.")
         return [m * i + c for i in X]
@@ -25,8 +41,8 @@ def function2(channel1: list, channel2: list) -> (list, Decimal):
     and the average value.
 
     Parameters:
-    channel1 (list): a list of floating point numbers stored as Decimal type,
-    channel2 (list): a list of floating point numbers stored as Decimal type
+    channel1 (list): a list of floating point numbers where each number is stored as Decimal type,
+    channel2 (list): a list of floating point numbers where each number is stored as Decimal type
 
     Returns:
     list: a list of the sum of the corresponding elements in channel1 and channel2,
@@ -43,16 +59,15 @@ def function2(channel1: list, channel2: list) -> (list, Decimal):
    
 def function3(channel: list) -> list:
     '''
-    This function takes a channel (a list of floating point numbers) and returns a new list of the same length
-    but every value is 1 divided by each value in the list passed into the function. This function handles the
-    division by zero error as if it identifies a 0 to be in the original list it will just set the value to 0
-    in the return list instead of throwing an error.
+    This function takes a channel list and returns the inverse value for each value in the original list. 
+    This function handles the division by zero error as if it identifies a 0 to be in the original list 
+    it will just set the value to 0 in the return list instead of throwing an error.
 
     Parameters:
-    channel (list): a list of floating point numbers
+    channel (list): a list of floating point numbers where each number is stored as a Decimal type
 
     Returns:
-    list: a list where 1 has been divided by every value in channel
+    list: a list of the inversed values where each value is stored as a Decimal type
     '''
     try:
         if type(channel) != list: raise TypeError("Argument passed into parameter 'channel' is not of type list.")
@@ -67,7 +82,7 @@ def function4(channel: list, metric: Decimal) -> list:
     this as a new list.
 
     Parameters:
-    channel (list): a list of floating point numbers stored as Decimal type
+    channel (list): a list of floating point numbers where each number is stored as Decimal type
     metric (Decimal): a single floating point number
 
     Returns:
@@ -92,7 +107,7 @@ def readChannel(dir: str) -> list:
     dir (str): the filename which the user wants to read the channel data from
 
     Returns:
-    list: a channel list of floating point numbers where each number is stored as a Decimal variable type
+    list: a channel list of floating point numbers where each number is stored as a Decimal type
     '''
     try:
         print("Reading input for channel...")
@@ -123,8 +138,8 @@ def readParameters(dir: str) -> (Decimal, Decimal):
     dir (str): the filename which the user wants to read the parameter data from
 
     Returns:
-    Decimal: a single floating point parameter value stored as a Decimal variable type
-    Decimal: a single floating point parameter value stored as a Decimal variable type
+    Decimal: a single floating point parameter value stored as a Decimal type
+    Decimal: a single floating point parameter value stored as a Decimal type
     '''
     try:
         print("Reading input for paramaters m and c...")
@@ -206,9 +221,11 @@ def main():
     parameters = dict.fromkeys(['m', 'c']) #Initialise dictionary keys with no values to store parameters 
     metrics = dict.fromkeys(['b']) #Initialise dictionary keys with no values to store metrics 
 
+    #Read in data from src/input:
     channels['X'] = readChannel(input("Enter the name of the file which stores the channel X in src/inputs: ") or "channels.txt")
     parameters['m'], parameters['c'] = readParameters(input("Enter the name of the file which stores paramaters m and c in src/inputs: ") or "parameters.txt")
 
+    #Process the data:
     print("Processing data...")
     channels['Y'] = function1(channels['X'], parameters['m'], parameters['c'])
     channels['A'] = function3(channels['X'])
@@ -216,6 +233,7 @@ def main():
     channels['C'] = function4(channels['X'], metrics['b'])
     print("Data processed succesfully. The value of b for the provided data and parameters is " + str(metrics['b']))
 
+    #Export the dictionaries to .txt files in src/output:
     dir = createOutputDir()
     writeOutput(metrics, dir, "metric_data.txt")
     writeOutput(channels, dir, "channels_data.txt")
